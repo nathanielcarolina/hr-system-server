@@ -1,11 +1,42 @@
 const express = require('express');
 const cors = require('cors');
+const mysql = require('mysql');
 
 const app = express();
+
+const SELECT_ALL_EMPLOYEES = 'SELECT * FROM show_emp_records';
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '12345678',
+    database: 'hr_db'
+});
+
+connection.connect(err => {
+    if (err) {
+        console.log(err);
+        return err;
+    } else {
+        console.log('Connected to the MySQL server');
+    }
+});
 
 app.use(cors());
 
 app.get('/employees', (req, res) => {
+    connection.query(SELECT_ALL_EMPLOYEES, (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
+app.get('/employeesefhduc', (req, res) => {
     return res.json({
         data: [
             {
