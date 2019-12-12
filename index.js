@@ -5,6 +5,7 @@ const mysql = require('mysql');
 const app = express();
 
 const SELECT_ALL_EMPLOYEES = 'SELECT * FROM show_emp_records';
+const SELECT_EMPLOYEE = 'SELECT * FROM show_emp_records WHERE EmployeeID = ?';
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -24,6 +25,19 @@ connection.connect(err => {
 
 app.use(cors());
 
+app.get('/employee/:id', (req, res) => {
+    connection.query(SELECT_EMPLOYEE, [req.params.id], (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            console.log(results);
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
 app.get('/employees', (req, res) => {
     connection.query(SELECT_ALL_EMPLOYEES, (err, results) => {
         if (err) {
@@ -36,7 +50,7 @@ app.get('/employees', (req, res) => {
     });
 });
 
-app.get('/employeesefhduc', (req, res) => {
+app.get('/employeesXXXXX', (req, res) => {
     return res.json({
         data: [
             {
