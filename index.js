@@ -49,120 +49,151 @@ app.get('/employees', (req, res) => {
         }
     });
 });
+// Insert an candidate
+app.post('/candidate', (req,res) => {
+    let can = req.body;
+    var candidateins = " SET @FName = ?; SET @LName = ?; SET @Email = ?; \
+        SET @addr_type = ?; SET @addr1 = ?; SET @addr2 = ?; SET @State = ?; \
+        SET @City = ?;SET @Country = ?;SET @Zipcode = ?; \
+        SET @Emp_Status_Name = ?;SET @Department = ?;SET @Position1 = ?; \
+        SET @School = ?;SET @Degree = ?;SET @School_Start_Date = ?; SET @School_End_Date = ?; \
+        SET @Company = ?;SET @Company_Position = ?;SET @Company_Start_Date = ?; \
+        SET @Company_End_Date = ?; SET @Grades = ?;  SET @w_s1 = ?; SET @w_s2 = ?; \
+        SET @DOB = ?;SET @Nationality = ?;SET @SSN = ?;SET @Contact = ?; \
+        CALL newcandidateform(@FName,@LName,@Email, @addr_type,@addr1,@addr2,@State, \
+            @City,@Country,@Zipcode,@Emp_Status_Name,@Department,@Position1, \
+            @School,@Degree,@School_Start_Date,@School_End_Date,@Company, \
+            @Company_Position,@Company_Start_Date,@Company_End_Date,@Grades,@w_s1,@w_s2,\
+            @DOB,@Nationality,@SSN,@Contact);" ;
 
-app.get('/employeesXXXXX', (req, res) => {
-    return res.json({
-        data: [
-            {
-                "Emp_ID": 1,
-                "department": "Administrative",
-                "LName": "Sharma",
-                "FName": "Shivam",
-                "Position_Name": "Administrative Officer",
-                "Emp_Status": "Full-time",
-                "Manager_LName": "Smith",
-                "Manager_FName": "Ben",
-                "Total_Compensation": 68000,
-                "Total_Availed_Leaves": 57,
-                "Total_Remaining_Leaves": 30,
-                "Rating_Date": "10/03/2019",
-                "Rating": 95
-            },
-            {
-                "Emp_ID": 2,
-                "department": "Development",
-                "LName": "Khona",
-                "FName": "Raj",
-                "Position_Name": "Software Developer",
-                "Emp_Status": "Consultant",
-                "Manager_LName": "Rogers",
-                "Manager_FName": "Kenny",
-                "Total_Compensation": 71000,
-                "Total_Availed_Leaves": 67,
-                "Total_Remaining_Leaves": 34,
-                "Rating_Date": "25/04/2019",
-                "Rating": 90
-            },
-            {
-                "Emp_ID": 3,
-                "department": "Finance",
-                "LName": "Jain",
-                "FName": "Abhijeet",
-                "Position_Name": "Finance Officer",
-                "Emp_Status": "Working Student",
-                "Manager_LName": "Bush",
-                "Manager_FName": "George",
-                "Total_Compensation": 75000,
-                "Total_Availed_Leaves": 40,
-                "Total_Remaining_Leaves": 60,
-                "Rating_Date": "10/07/2019",
-                "Rating": 93
-            },
-            {
-                "Emp_ID": 4,
-                "department": "Human Resources",
-                "LName": "Carolina",
-                "FName": "Nathaniel",
-                "Position_Name": "Human Resources Officer",
-                "Emp_Status": "Working Student",
-                "Manager_LName": "Anders",
-                "Manager_FName": "Jörg",
-                "Total_Compensation": 64000,
-                "Total_Availed_Leaves": 46,
-                "Total_Remaining_Leaves": 73,
-                "Rating_Date": "10/03/2018",
-                "Rating": 85
-            },
-            {
-                "Emp_ID": 5,
-                "department": "IT Support",
-                "LName": "Ghule",
-                "FName": "Snehal",
-                "Position_Name": "IT Support Officer",
-                "Emp_Status": "Full-time",
-                "Manager_LName": "Müller",
-                "Manager_FName": "Josef",
-                "Total_Compensation": 83000,
-                "Total_Availed_Leaves": 80,
-                "Total_Remaining_Leaves": 92,
-                "Rating_Date": "14/07/2018",
-                "Rating": 89
-            }
-        ]
+    mysqlConnection.query(candidateins, [can.FName, can.LName, can.Email, 
+        can.addr_type, can.addr1, can.addr2, can.State,
+        can.City, can.Country, can.Zipcode, can.Emp_Status_Name, can.Department, can.Position1, 
+        can.School, can.Degree, can.School_Start_Date, can.School_End_Date, can.Company, can.Company_Position, 
+        can.Company_Start_Date, can.Company_End_Date, can.Grades, can.w_s1, can.w_s2,
+        can.DOB, can.Nationality, can.SSN, can.Contact, ], (err, rows,)=>{
+        if(err)
+        console.log(err);
+        else
+        res.send(rows);
     })
+
+
 });
 
-app.get('/equipment', (req, res) => {
-    return res.json({
-        data: [
-            {
-                "Equipment_ID": 1,
-                "Equipment_Name": "Dell Laptop",
-                "Assigned_To": "Jain, Abhijeet"
-            },
-            {
-                "Equipment_ID": 2,
-                "Equipment_Name": "Apple Monitor 1",
-                "Assigned_To": "Ghule, Snehal"
-            },
-            {
-                "Equipment_ID": 3,
-                "Equipment_Name": "Apple Mouse 1",
-                "Assigned_To": "Ghule, Snehal"
-            },
-            {
-                "Equipment_ID": 4,
-                "Equipment_Name": "Apple Mouse 2",
-                "Assigned_To": "Khona, Raj"
-            },
-            {
-                "Equipment_ID": 5,
-                "Equipment_Name": "Apple MacBook Pro",
-                "Assigned_To": "Sharma, Shivam"
-            }
-        ]
-    })
-}) 
+// app.get('/employeesXXXXX', (req, res) => {
+//     return res.json({
+//         data: [
+//             {
+//                 "Emp_ID": 1,
+//                 "department": "Administrative",
+//                 "LName": "Sharma",
+//                 "FName": "Shivam",
+//                 "Position_Name": "Administrative Officer",
+//                 "Emp_Status": "Full-time",
+//                 "Manager_LName": "Smith",
+//                 "Manager_FName": "Ben",
+//                 "Total_Compensation": 68000,
+//                 "Total_Availed_Leaves": 57,
+//                 "Total_Remaining_Leaves": 30,
+//                 "Rating_Date": "10/03/2019",
+//                 "Rating": 95
+//             },
+//             {
+//                 "Emp_ID": 2,
+//                 "department": "Development",
+//                 "LName": "Khona",
+//                 "FName": "Raj",
+//                 "Position_Name": "Software Developer",
+//                 "Emp_Status": "Consultant",
+//                 "Manager_LName": "Rogers",
+//                 "Manager_FName": "Kenny",
+//                 "Total_Compensation": 71000,
+//                 "Total_Availed_Leaves": 67,
+//                 "Total_Remaining_Leaves": 34,
+//                 "Rating_Date": "25/04/2019",
+//                 "Rating": 90
+//             },
+//             {
+//                 "Emp_ID": 3,
+//                 "department": "Finance",
+//                 "LName": "Jain",
+//                 "FName": "Abhijeet",
+//                 "Position_Name": "Finance Officer",
+//                 "Emp_Status": "Working Student",
+//                 "Manager_LName": "Bush",
+//                 "Manager_FName": "George",
+//                 "Total_Compensation": 75000,
+//                 "Total_Availed_Leaves": 40,
+//                 "Total_Remaining_Leaves": 60,
+//                 "Rating_Date": "10/07/2019",
+//                 "Rating": 93
+//             },
+//             {
+//                 "Emp_ID": 4,
+//                 "department": "Human Resources",
+//                 "LName": "Carolina",
+//                 "FName": "Nathaniel",
+//                 "Position_Name": "Human Resources Officer",
+//                 "Emp_Status": "Working Student",
+//                 "Manager_LName": "Anders",
+//                 "Manager_FName": "Jörg",
+//                 "Total_Compensation": 64000,
+//                 "Total_Availed_Leaves": 46,
+//                 "Total_Remaining_Leaves": 73,
+//                 "Rating_Date": "10/03/2018",
+//                 "Rating": 85
+//             },
+//             {
+//                 "Emp_ID": 5,
+//                 "department": "IT Support",
+//                 "LName": "Ghule",
+//                 "FName": "Snehal",
+//                 "Position_Name": "IT Support Officer",
+//                 "Emp_Status": "Full-time",
+//                 "Manager_LName": "Müller",
+//                 "Manager_FName": "Josef",
+//                 "Total_Compensation": 83000,
+//                 "Total_Availed_Leaves": 80,
+//                 "Total_Remaining_Leaves": 92,
+//                 "Rating_Date": "14/07/2018",
+//                 "Rating": 89
+//             }
+//         ]
+//     })
+// });
+
+// app.get('/equipment', (req, res) => {
+//     return res.json({
+//         data: [
+//             {
+//                 "Equipment_ID": 1,
+//                 "Equipment_Name": "Dell Laptop",
+//                 "Assigned_To": "Jain, Abhijeet"
+//             },
+//             {
+//                 "Equipment_ID": 2,
+//                 "Equipment_Name": "Apple Monitor 1",
+//                 "Assigned_To": "Ghule, Snehal"
+//             },
+//             {
+//                 "Equipment_ID": 3,
+//                 "Equipment_Name": "Apple Mouse 1",
+//                 "Assigned_To": "Ghule, Snehal"
+//             },
+//             {
+//                 "Equipment_ID": 4,
+//                 "Equipment_Name": "Apple Mouse 2",
+//                 "Assigned_To": "Khona, Raj"
+//             },
+//             {
+//                 "Equipment_ID": 5,
+//                 "Equipment_Name": "Apple MacBook Pro",
+//                 "Assigned_To": "Sharma, Shivam"
+//             }
+//         ]
+//     })
+// }) 
 
 app.listen(4000, () => {
     console.log('HR-System server listening on Port 4000');
