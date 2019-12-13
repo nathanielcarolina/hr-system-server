@@ -4,8 +4,13 @@ const mysql = require('mysql');
 
 const app = express();
 
-const SELECT_ALL_EMPLOYEES = 'SELECT * FROM show_emp_records';
+const SELECT_ALL_EMPLOYEES_ASC = 'SELECT * FROM show_emp_records ORDER BY LastName ASC';
 const SELECT_EMPLOYEE = 'SELECT * FROM show_emp_records WHERE EmployeeID = ?';
+const SELECT_ALL_DEPARTMENTS = 'SELECT * FROM department';
+const SELECT_ALL_EMP_STATUS = 'SELECT * FROM emp_status';
+const SELECT_ALL_POSITIONS = 'SELECT Position_ID, Position_Name FROM position WHERE Dept_ID = ?';
+const SELECT_ADDRESS = 'SELECT * FROM address WHERE Person_ID = ?';
+
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -38,8 +43,34 @@ app.get('/employee/:id', (req, res) => {
     });
 });
 
+app.get('/department/:id', (req, res) => {
+    connection.query(SELECT_ALL_POSITIONS, [req.params.id], (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            console.log(results);
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
+app.get('/address/:id', (req, res) => {
+    connection.query(SELECT_ADDRESS, [req.params.id], (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            console.log(results);
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
 app.get('/employees', (req, res) => {
-    connection.query(SELECT_ALL_EMPLOYEES, (err, results) => {
+    connection.query(SELECT_ALL_EMPLOYEES_ASC, (err, results) => {
         if (err) {
             return res.send(err);
         } else {
@@ -49,6 +80,31 @@ app.get('/employees', (req, res) => {
         }
     });
 });
+
+app.get('/departments', (req, res) => {
+    connection.query(SELECT_ALL_DEPARTMENTS, (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
+app.get('/employee-statuses', (req, res) => {
+    connection.query(SELECT_ALL_EMP_STATUS, (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
 // Insert an candidate
 app.post('/candidate', (req,res) => {
     let can = req.body;
