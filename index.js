@@ -13,6 +13,7 @@ const SELECT_ALL_DEPARTMENTS = 'SELECT * FROM department';
 const SELECT_ALL_EMP_STATUS = 'SELECT * FROM emp_status';
 const SELECT_ALL_POSITIONS = 'SELECT Position_ID, Position_Name FROM position WHERE Dept_ID = ?';
 const SELECT_ADDRESS = 'SELECT * FROM address WHERE Person_ID = ?';
+const SELECT_CANDIDATE_STATUS = 'SELECT * FROM candidate'
 
 
 const connection = mysql.createConnection({
@@ -33,6 +34,36 @@ connection.connect(err => {
 });
 
 app.use(cors());
+
+
+app.get('/candidatestatus', (req, res) => {
+    return res.json({
+        data: [
+            {
+                "CandidateID":111,
+                 "LastName":"jain", 
+                 "FirstName":"abhijeet",
+                  "Position":"trainee", 
+                  "Status":"in progress"
+
+
+            }
+        ] })
+});
+
+
+    // connection.query(SELECT_EMPLOYEE, [req.params.id], (err, results) => {
+    //     if (err) {
+    //         return res.send(err);
+    //     } else {
+    //         console.log(results);
+    //         return res.json({
+    //             data: results
+    //         })
+    //     }
+    // });
+
+
 
 app.get('/employee/:id', (req, res) => {
     connection.query(SELECT_EMPLOYEE, [req.params.id], (err, results) => {
@@ -112,8 +143,8 @@ app.get('/employee-statuses', (req, res) => {
 // Insert an candidate
 app.post('/candidate/new', (req,res) => {
     let can = req.body;
-    let candidateins = "SET @FName = ?; SET @LName = ?; SET @Email = ?; \
-        SET @addr1 = ?; SET @addr2 = ?; SET @State = ?; \
+    var candidateins = " SET @FName = ?; SET @LName = ?; SET @Email = ?; \
+         SET @addr1 = ?; SET @addr2 = ?; SET @State = ?; \
         SET @City = ?;SET @Country = ?;SET @Zipcode = ?; \
         SET @Empstatusid = ?; SET @deptid = ?; SET @Position1 = ?; \
         SET @School = ?;SET @Degree = ?;SET @School_Start_Date = ?; SET @School_End_Date = ?; \
@@ -190,9 +221,22 @@ app.post('/candidate/new', (req,res) => {
 app.post('/employee/edit/personal-information', (req, res) => {    
 
     //Need help in updating database (calling stored procedure) using information from req.body
-    let body = req.body;
-    console.log(req.body);
-})
+    let emp = req.body;
+    var employeeedit = "SET @Posi = ?; SET @Manag_ID = ?; SET @Empsta   = ?; \
+    SET @percont = ?; SET @workcont = ?; SET @addr1 = ?; \
+    SET @addr2 = ?; SET @cit = ?; SET @stat = ?; SET @zipc = ?; SET @countr = ?; \
+    CALL Checkempdetailsandupdate(@Posi, @Manag_ID, @Empsta, @percont, @workcont, @addr1, @addr2, @cit, @stat, @zipc, @countr,  ); " ; 
+    
+connection.query(employeeedit,[emp.Posi, emp.Manag_ID, emp.Emp.sta  , 
+    emp.percont, emp.workcont, emp.addr1,
+    emp.addr2, emp.cit, emp.stat, emp.zipc, emp.countr,
+    ],(err, rows)=>{
+        if(err)
+        console.log(err)
+        else
+        res.send(rows);
+    })
+});
 
 app.post('/employee/edit/payroll', (req, res) => {    
 
