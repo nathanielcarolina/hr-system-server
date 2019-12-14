@@ -112,21 +112,21 @@ app.get('/employee-statuses', (req, res) => {
 app.post('/candidate', (req,res) => {
     let can = req.body;
     var candidateins = " SET @FName = ?; SET @LName = ?; SET @Email = ?; \
-        SET @addr_type = ?; SET @addr1 = ?; SET @addr2 = ?; SET @State = ?; \
+         SET @addr1 = ?; SET @addr2 = ?; SET @State = ?; \
         SET @City = ?;SET @Country = ?;SET @Zipcode = ?; \
         SET @Emp_Status_Name = ?;SET @Department = ?;SET @Position1 = ?; \
         SET @School = ?;SET @Degree = ?;SET @School_Start_Date = ?; SET @School_End_Date = ?; \
         SET @Company = ?;SET @Company_Position = ?;SET @Company_Start_Date = ?; \
         SET @Company_End_Date = ?; SET @Grades = ?;  SET @w_s1 = ?; SET @w_s2 = ?; \
         SET @DOB = ?;SET @Nationality = ?;SET @SSN = ?;SET @Contact = ?; \
-        CALL newcandidateform(@FName,@LName,@Email, @addr_type,@addr1,@addr2,@State, \
+        CALL newcandidateform(@FName,@LName,@Email,@addr1,@addr2,@State, \
             @City,@Country,@Zipcode,@Emp_Status_Name,@Department,@Position1, \
             @School,@Degree,@School_Start_Date,@School_End_Date,@Company, \
             @Company_Position,@Company_Start_Date,@Company_End_Date,@Grades,@w_s1,@w_s2,\
             @DOB,@Nationality,@SSN,@Contact);" ;
 
     mysqlConnection.query(candidateins, [can.FName, can.LName, can.Email, 
-        can.addr_type, can.addr1, can.addr2, can.State,
+         can.addr1, can.addr2, can.State,
         can.City, can.Country, can.Zipcode, can.Emp_Status_Name, can.Department, can.Position1, 
         can.School, can.Degree, can.School_Start_Date, can.School_End_Date, can.Company, can.Company_Position, 
         can.Company_Start_Date, can.Company_End_Date, can.Grades, can.w_s1, can.w_s2,
