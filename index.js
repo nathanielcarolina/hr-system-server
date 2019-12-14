@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql');
+const bodyParser = require('body-parser');
 
 const app = express();
+app.use( bodyParser.urlencoded({ extended: true }) );
+app.use( bodyParser.json() );
 
 const SELECT_ALL_EMPLOYEES_ASC = 'SELECT * FROM show_emp_records ORDER BY LastName ASC';
 const SELECT_EMPLOYEE = 'SELECT * FROM show_emp_records WHERE EmployeeID = ?';
@@ -133,9 +136,35 @@ app.post('/candidate', (req,res) => {
         else
         res.send(rows);
     })
-
-
 });
+
+app.post('/employee/edit/personal-information', (req, res) => {    
+
+    //Need help in updating database (calling stored procedure) using information from req.body
+    let body = req.body;
+    console.log(req.body);
+})
+
+app.post('/employee/edit/payroll', (req, res) => {    
+
+    //Need help in updating database (calling stored procedure) using information from req.body
+    let body = req.body;
+    console.log(req.body);
+})
+
+
+// app.get('/employee/edit/id4545', (req, res) => {
+//     let testpost  = {Emp_ID: 102, Contact_Type_ID: 1, contact_Number: '222222222'};
+//     connection.query('UPDATE person SET Personal_Contact = ? WHERE Person_ID = 11', [testpost.contact_Number], function (err, results) {
+//         if (err) {
+//             return res.send(err);
+//         } else {
+//             return res.json({
+//                 data: results
+//             })
+//         }
+//     });
+// });
 
 // app.get('/employeesXXXXX', (req, res) => {
 //     return res.json({
