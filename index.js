@@ -8,6 +8,7 @@ app.use( bodyParser.urlencoded({ extended: true }) );
 app.use( bodyParser.json() );
 
 const SELECT_ALL_EMPLOYEES_ASC = 'SELECT * FROM show_emp_records ORDER BY LastName ASC';
+const SELECT_EMPLOYEES_BY_DEPT = 'SELECT * FROM show_emp_records WHERE Dept_ID = ? ORDER BY LastName ASC';
 const SELECT_EMPLOYEE = 'SELECT * FROM show_emp_records WHERE EmployeeID = ?';
 const SELECT_ALL_DEPARTMENTS = 'SELECT * FROM department';
 const SELECT_ALL_EMP_STATUS = 'SELECT * FROM emp_status';
@@ -36,9 +37,6 @@ connection.connect(err => {
 
 app.use(cors());
 
-
-
-
     // connection.query(SELECT_EMPLOYEE, [req.params.id], (err, results) => {
     //     if (err) {
     //         return res.send(err);
@@ -49,8 +47,6 @@ app.use(cors());
     //         })
     //     }
     // });
-
-
 
 app.get('/employee/:id', (req, res) => {
     connection.query(SELECT_EMPLOYEE, [req.params.id], (err, results) => {
@@ -105,6 +101,18 @@ app.get('/employees', (req, res) => {
 
 app.get('/departments', (req, res) => {
     connection.query(SELECT_ALL_DEPARTMENTS, (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
+app.get('/department-employees/:deptID', (req, res) => {
+    connection.query(SELECT_EMPLOYEES_BY_DEPT, [req.params.deptID], (err, results) => {
         if (err) {
             return res.send(err);
         } else {
