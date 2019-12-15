@@ -177,7 +177,7 @@ app.post('/candidate/new', (req,res) => {
         "S", 
         "W",
         can.DOB, 
-        null, 
+        "default", 
         can.SSN, 
         can.PersonalContact
     ], (err, rows)=>{
