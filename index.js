@@ -182,7 +182,7 @@ app.post('/candidate/new', (req,res) => {
         "S", 
         "W",
         can.DOB, 
-        "Chinese", 
+        null, 
         can.SSN, 
         can.PersonalContact
     ], (err, rows)=>{
