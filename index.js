@@ -13,7 +13,8 @@ const SELECT_ALL_DEPARTMENTS = 'SELECT * FROM department';
 const SELECT_ALL_EMP_STATUS = 'SELECT * FROM emp_status';
 const SELECT_ALL_POSITIONS = 'SELECT Position_ID, Position_Name FROM position WHERE Dept_ID = ?';
 const SELECT_ADDRESS = 'SELECT * FROM address WHERE Person_ID = ?';
-const SELECT_CANDIDATE_STATUS = 'SELECT * FROM show_pending_candidates ';
+const SELECT_CANDIDATE_STATUS = 'SELECT * FROM show_pending_candidates WHERE NOT Hiring_Status = "Hired"';
+const UPDATE_CANDIDATE_STATUS = 'UPDATE candidate SET Hiring_Status_ID = ? WHERE Candidate_ID = ?';
 
 
 const connection = mysql.createConnection({
@@ -230,6 +231,7 @@ app.post('/employee/edit/payroll', (req, res) => {
     let body = req.body;
     console.log(req.body);
 })
+
 app.get('/candidatestatus', (req, res) => {
     connection.query(SELECT_CANDIDATE_STATUS, (err, results) => {
         if (err) {
@@ -240,6 +242,19 @@ app.get('/candidatestatus', (req, res) => {
             })
         }
     });
+});
+
+app.post("/candidatestatus/edit/:candidateID/:hiringStatusID", (req, res) => {
+    connection.query(UPDATE_CANDIDATE_STATUS, [
+        req.params.hiringStatusID, 
+        req.params.candidateID
+    ], (err, rows) => {
+        if (err)
+            console.log(err);
+        else
+            console.log(rows);
+            res.send(rows);
+    })
 });
 
 // app.get('/employee/edit/id4545', (req, res) => {
