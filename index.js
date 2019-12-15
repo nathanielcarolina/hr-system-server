@@ -13,7 +13,7 @@ const SELECT_ALL_DEPARTMENTS = 'SELECT * FROM department';
 const SELECT_ALL_EMP_STATUS = 'SELECT * FROM emp_status';
 const SELECT_ALL_POSITIONS = 'SELECT Position_ID, Position_Name FROM position WHERE Dept_ID = ?';
 const SELECT_ADDRESS = 'SELECT * FROM address WHERE Person_ID = ?';
-const SELECT_CANDIDATE_STATUS = 'SELECT * FROM candidate'
+const SELECT_CANDIDATE_STATUS = 'SELECT * FROM show_pending_candidates ';
 
 
 const connection = mysql.createConnection({
@@ -35,20 +35,6 @@ connection.connect(err => {
 app.use(cors());
 
 
-app.get('/candidatestatus', (req, res) => {
-    return res.json({
-        data: [
-            {
-                "CandidateID":111,
-                 "LastName":"jain", 
-                 "FirstName":"abhijeet",
-                  "Position":"trainee", 
-                  "Status":"in progress"
-
-
-            }
-        ] })
-});
 
 
     // connection.query(SELECT_EMPLOYEE, [req.params.id], (err, results) => {
@@ -195,7 +181,17 @@ app.post('/employee/edit/payroll', (req, res) => {
     let body = req.body;
     console.log(req.body);
 })
-
+app.get('/candidatestatus', (req, res) => {
+    connection.query(SELECT_CANDIDATE_STATUS, (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
 
 // app.get('/employee/edit/id4545', (req, res) => {
 //     let testpost  = {Emp_ID: 102, Contact_Type_ID: 1, contact_Number: '222222222'};
