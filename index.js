@@ -212,33 +212,97 @@ app.post('/candidate/new', (req,res) => {
 // "Company_Position":null,
 // "Company_StartDate":null,
 // "Company_EndDate":null
-
+ 
 app.post('/employee/edit/personal-information', (req, res) => {    
-
-    //Need help in updating database (calling stored procedure) using information from req.body
     let emp = req.body;
-    var employeeedit = "SET @Posi = ?; SET @Manag_ID = ?; SET @Empsta   = ?; \
-    SET @percont = ?; SET @workcont = ?; SET @addr1 = ?; \
-    SET @addr2 = ?; SET @cit = ?; SET @stat = ?; SET @zipc = ?; SET @countr = ?; \
-    CALL Checkempdetailsandupdate(@Posi, @Manag_ID, @Empsta, @percont, @workcont, @addr1, @addr2, @cit, @stat, @zipc, @countr,  ); " ; 
-    
-connection.query(employeeedit,[emp.Posi, emp.Manag_ID, emp.Emp.sta  , 
-    emp.percont, emp.workcont, emp.addr1,
-    emp.addr2, emp.cit, emp.stat, emp.zipc, emp.countr,
-    ],(err, rows)=>{
-        if(err)
-        console.log(err)
-        else
-        res.send(rows);
+    console.log(emp);
+    var employeeEditPersonalInformation = "\
+        SET @emps = ?; \
+        SET @Posi = ?; \
+        SET @Manag_ID = ?; \
+        SET @Empsta = ?; \
+        SET @percont = ?; \
+        SET @workcont = ?; \
+        SET @addr1 = ?; \
+        SET @addr2 = ?; \
+        SET @cit = ?; \
+        SET @stat = ?; \
+        SET @zipc = ?; \
+        SET @countr = ?; \
+        CALL Checkempdetailsandupdate(\
+        @emps, \
+        @Posi, \
+        @Manag_ID, \
+        @Empsta, \
+        @percont, \
+        @workcont, \
+        @addr1, \
+        @addr2, \
+        @cit, \
+        @stat, \
+        @zipc, \
+        @countr);"; 
+    connection.query(employeeEditPersonalInformation, [
+        emp.EmployeeID, 
+        emp.Position, 
+        emp.Manager, 
+        emp.EmployeeStatus, 
+        emp.PersonalContact, 
+        emp.WorkContact, 
+        emp.Address1, 
+        emp.Address2, 
+        emp.City, 
+        emp.State, 
+        emp.Zip, 
+        "Deutschland"
+        // emp.Department ?        
+    ], (err, rows) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            // console.log(rows);
+            res.send(rows);
+        }
     })
 });
 
 app.post('/employee/edit/payroll', (req, res) => {    
-
-    //Need help in updating database (calling stored procedure) using information from req.body
     let body = req.body;
-    console.log(req.body);
-})
+    let employeeEditPayroll = "\
+        SET @emp = ?; \
+        SET @Compen = ?; \
+        SET @B = ?; \
+        SET @ShiftD = ?; \
+        SET @BankName = ?; \
+        SET @IBANDet = ?; \
+        SET @BICDet = ?; \
+        SET @IncrementVal = ?; \
+        CALL CheckPayrollDetailsAndUpdate(\
+        @emp, \
+        @Compen, \
+        @B, \
+        @ShiftD, \
+        @BankName, \
+        @IBANDet, \
+        @BICDet, \
+        @IncrementVal);";
+    connection.query(employeeEditPayroll, [
+        body.EmployeeID, 
+        body.Compensation, 
+        body.Bonus, 
+        " ", 
+        body.BankName, 
+        body.IBAN, 
+        body.BIC, 
+        body.Increment       
+    ], (err, rows)=>{
+        if (err)
+            console.log(err);
+        else
+            res.send(rows);
+    })
+});
 
 app.get('/candidatestatus', (req, res) => {
     connection.query(SELECT_CANDIDATE_STATUS, (err, results) => {
