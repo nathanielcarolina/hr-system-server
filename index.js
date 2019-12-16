@@ -17,6 +17,7 @@ const SELECT_ADDRESS = 'SELECT * FROM address WHERE Person_ID = ?';
 const SELECT_CANDIDATE_STATUS = 'SELECT * FROM show_pending_candidates WHERE NOT Hiring_Status = "Hired"';
 const UPDATE_CANDIDATE_STATUS = 'UPDATE candidate SET Hiring_Status_ID = ? WHERE Candidate_ID = ?';
 const SELECT_PERFORMANCES = 'SELECT * FROM performance ORDER BY Rating_Date DESC';
+const SELECT_EQUIPMENT_STATUS = 'select *from show_equipment';
 const SELECT_PERF_BY_EMP = 'SELECT * FROM performance WHERE Emp_ID = ?';
 const INSERT_PERFORMANCE = 'INSERT INTO performance (Emp_ID, Manager_ID, Rating, Comments, Rating_Date) VALUES (?, ?, ?, ?, ?)';
 
@@ -231,6 +232,24 @@ app.post('/candidate/new', (req,res) => {
             res.send(rows);
     })
 });
+app.post('/separation', (req,res) => {
+    let sep = req.body;
+    var separate = "SET @emps = ?; SET @dor = ?; SET @lwd = ?; SET @fnf = ?; \
+    SET @rol = ?; SET @eqpreturn = ?;\
+    CALL insertonseparation(@emps, @dor, @lwd, @fnf, \
+        @rol, @eqpreturn);" ;
+    connection.query(separate,[
+        sep.emps, sep.dor, sep.lwd, sep.fnf, 
+sep.rol, sep.eqpreturn] ,(err, rows)=>{
+    if(err)
+        console.log(err);
+    else
+        res.send(rows);
+})
+
+});
+
+
 
 // "FName":null,
 // "LName":null,
@@ -371,6 +390,19 @@ app.post("/candidatestatus/edit/:candidateID/:hiringStatusID", (req, res) => {
             console.log(rows);
             res.send(rows);
     })
+});
+
+app.get('/equipment', (req, res) => {
+    connection.query(SELECT_EQUIPMENT_STATUS, [req.params.id], (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            console.log(results);
+            return res.json({
+                data: results
+            })
+        }
+    });
 });
 
 // app.get('/employee/edit/id4545', (req, res) => {
