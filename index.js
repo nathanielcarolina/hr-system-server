@@ -16,6 +16,7 @@ const SELECT_ALL_POSITIONS = 'SELECT Position_ID, Position_Name FROM position WH
 const SELECT_ADDRESS = 'SELECT * FROM address WHERE Person_ID = ?';
 const SELECT_CANDIDATE_STATUS = 'SELECT * FROM show_pending_candidates WHERE NOT Hiring_Status = "Hired"';
 const UPDATE_CANDIDATE_STATUS = 'UPDATE candidate SET Hiring_Status_ID = ? WHERE Candidate_ID = ?';
+const SELECT_PERF_BY_EMP = 'SELECT * FROM performance WHERE Emp_ID = ?';
 
 
 const connection = mysql.createConnection({
@@ -50,6 +51,19 @@ app.use(cors());
 
 app.get('/employee/:id', (req, res) => {
     connection.query(SELECT_EMPLOYEE, [req.params.id], (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            console.log(results);
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
+app.get('/performance/:id', (req, res) => {
+    connection.query(SELECT_PERF_BY_EMP, [req.params.id], (err, results) => {
         if (err) {
             return res.send(err);
         } else {
