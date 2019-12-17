@@ -16,11 +16,8 @@ const SELECT_ALL_POSITIONS = 'SELECT Position_ID, Position_Name FROM position WH
 const SELECT_ADDRESS = 'SELECT * FROM address WHERE Person_ID = ?';
 const SELECT_CANDIDATE_STATUS = 'SELECT * FROM show_pending_candidates WHERE NOT Hiring_Status = "Hired"';
 const UPDATE_CANDIDATE_STATUS = 'UPDATE candidate SET Hiring_Status_ID = ? WHERE Candidate_ID = ?';
-<<<<<<< HEAD
 const SELECT_EQUIPMENT_STATUS = 'select *from show_equipment';
-=======
 const SELECT_PERF_BY_EMP = 'SELECT * FROM performance WHERE Emp_ID = ?';
->>>>>>> e3ff93c76712ae7abc53da6e8268a5da4665528c
 
 
 const connection = mysql.createConnection({
