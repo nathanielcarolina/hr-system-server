@@ -186,16 +186,16 @@ app.post('/candidate/new', (req,res) => {
     var candidateins = " SET @FName = ?; SET @LName = ?; SET @Email = ?; \
          SET @addr1 = ?; SET @addr2 = ?; SET @State = ?; \
         SET @City = ?;SET @Country = ?;SET @Zipcode = ?; \
-        SET @Empstatusid = ?; SET @deptid = ?; SET @Position1 = ?; \
+        SET @Empstatusid = ?; SET @deptid = ?; SET @posi = ?; \
         SET @School = ?;SET @Degree = ?;SET @School_Start_Date = ?; SET @School_End_Date = ?; \
         SET @Company = ?;SET @Company_Position = ?;SET @Company_Start_Date = ?; \
         SET @Company_End_Date = ?; SET @Grades = ?;  SET @w_s1 = ?; SET @w_s2 = ?; \
-        SET @DOB = ?;SET @Nationality = ?;SET @SSN = ?;SET @Contact = ?; \
+        SET @DOB = ?;SET @Nationality = ?;SET @SSN = ?;SET @Contact = ?; @remarks = ?; \
         CALL newcandidateform(@FName,@LName,@Email, @addr1,@addr2,@State, \
-            @City,@Country,@Zipcode,@Empstatusid, @deptid, @Position1, \
+            @City,@Country,@Zipcode,@Empstatusid, @deptid, @posi, \
             @School,@Degree,@School_Start_Date,@School_End_Date,@Company, \
             @Company_Position,@Company_Start_Date,@Company_End_Date,@Grades,@w_s1,@w_s2,\
-            @DOB,@Nationality,@SSN,@Contact);" ;
+            @DOB,@Nationality,@SSN,@Contact,@remarks);" ;
 
     connection.query(candidateins, [
         can.FName, 
@@ -224,7 +224,8 @@ app.post('/candidate/new', (req,res) => {
         can.DOB, 
         "German", 
         can.SSN, 
-        can.PersonalContact
+        can.PersonalContact,
+        can.Remarks
     ], (err, rows)=>{
         if(err)
             console.log(err);
@@ -232,6 +233,7 @@ app.post('/candidate/new', (req,res) => {
             res.send(rows);
     })
 });
+
 app.post('/separation', (req,res) => {
     let sep = req.body;
     var separate = "SET @emps = ?; SET @dor = ?; SET @lwd = ?; SET @fnf = ?; \
