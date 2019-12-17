@@ -18,6 +18,10 @@ const SELECT_CANDIDATE_STATUS = 'SELECT * FROM show_pending_candidates WHERE NOT
 const UPDATE_CANDIDATE_STATUS = 'UPDATE candidate SET Hiring_Status_ID = ? WHERE Candidate_ID = ?';
 const SELECT_EQUIPMENT_STATUS = 'select *from show_equipment';
 const SELECT_PERF_BY_EMP = 'SELECT * FROM performance WHERE Emp_ID = ?';
+const SELECT_PERFORMANCES = 'SELECT * FROM performance ORDER BY Rating_Date DESC';
+const SELECT_EQUIPMENT_STATUS = 'select *from show_equipment';
+const SELECT_PERF_BY_EMP = 'SELECT * FROM performance WHERE Emp_ID = ?';
+const INSERT_PERFORMANCE = 'INSERT INTO performance (Emp_ID, Manager_ID, Rating, Comments, Rating_Date) VALUES (?, ?, ?, ?, ?)';
 
 
 const connection = mysql.createConnection({
@@ -126,6 +130,34 @@ app.get('/departments', (req, res) => {
     });
 });
 
+app.get('/performances', (req, res) => {
+    connection.query(SELECT_PERFORMANCES, (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
+app.post('/performance/new', (req, res) => {    
+    let body = req.body;
+    connection.query(INSERT_PERFORMANCE, [
+        body.EmployeeID, 
+        body.RatedBy, 
+        body.Rating, 
+        body.Comments, 
+        body.RatingDate
+    ], (err, rows) => {
+        if (err)
+            console.log(err);
+        else
+            res.send(rows);
+    })
+});
+
 app.get('/department-employees/:deptID', (req, res) => {
     connection.query(SELECT_EMPLOYEES_BY_DEPT, [req.params.deptID], (err, results) => {
         if (err) {
@@ -192,7 +224,7 @@ app.post('/candidate/new', (req,res) => {
         "S", 
         "W",
         can.DOB, 
-        "default", 
+        "German", 
         can.SSN, 
         can.PersonalContact
     ], (err, rows)=>{
