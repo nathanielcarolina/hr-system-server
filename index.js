@@ -19,8 +19,8 @@ const UPDATE_CANDIDATE_STATUS = 'UPDATE candidate SET Hiring_Status_ID = ? WHERE
 const SELECT_EQUIPMENT_STATUS = 'select *from show_equipment';
 const SELECT_PERF_BY_EMP = 'SELECT * FROM performance WHERE Emp_ID = ?';
 const SELECT_PERFORMANCES = 'SELECT * FROM performance ORDER BY Rating_Date DESC';
-const SELECT_EQUIPMENT_STATUS = 'select *from show_equipment';
-const SELECT_PERF_BY_EMP = 'SELECT * FROM performance WHERE Emp_ID = ?';
+
+
 const INSERT_PERFORMANCE = 'INSERT INTO performance (Emp_ID, Manager_ID, Rating, Comments, Rating_Date) VALUES (?, ?, ?, ?, ?)';
 
 
