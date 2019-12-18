@@ -17,9 +17,12 @@ const SELECT_ADDRESS = 'SELECT * FROM address WHERE Person_ID = ?';
 const SELECT_CANDIDATE_STATUS = 'SELECT * FROM show_pending_candidates WHERE NOT Hiring_Status = "Hired"';
 const UPDATE_CANDIDATE_STATUS = 'UPDATE candidate SET Hiring_Status_ID = ? WHERE Candidate_ID = ?';
 const SELECT_PERFORMANCES = 'SELECT * FROM performance ORDER BY Rating_Date DESC';
-const SELECT_EQUIPMENT_STATUS = 'select *from show_equipment';
+const SELECT_EQUIPMENT_STATUS = 'select * from show_equipment';
 const SELECT_PERF_BY_EMP = 'SELECT * FROM performance WHERE Emp_ID = ?';
 const INSERT_PERFORMANCE = 'INSERT INTO performance (Emp_ID, Manager_ID, Rating, Comments, Rating_Date) VALUES (?, ?, ?, ?, ?)';
+const SELECT_CONTACT = 'SELECT * FROM contact WHERE Emp_ID = ?';
+const SELECT_PAYROLL = 'SELECT * FROM payroll WHERE Emp_ID = ?';
+const SELECT_LEAVES = 'SELECT * FROM leave_mgmt WHERE Emp_ID = ?';
 
 
 const connection = mysql.createConnection({
@@ -54,6 +57,45 @@ app.use(cors());
 
 app.get('/employee/:id', (req, res) => {
     connection.query(SELECT_EMPLOYEE, [req.params.id], (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            console.log(results);
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
+app.get('/contact/:id', (req, res) => {
+    connection.query(SELECT_CONTACT, [req.params.id], (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            console.log(results);
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
+app.get('/payroll/:id', (req, res) => {
+    connection.query(SELECT_PAYROLL, [req.params.id], (err, results) => {
+        if (err) {
+            return res.send(err);
+        } else {
+            console.log(results);
+            return res.json({
+                data: results
+            })
+        }
+    });
+});
+
+app.get('/leaves/:id', (req, res) => {
+    connection.query(SELECT_LEAVES, [req.params.id], (err, results) => {
         if (err) {
             return res.send(err);
         } else {
@@ -142,14 +184,38 @@ app.get('/performances', (req, res) => {
 
 app.post('/performance/new', (req, res) => {    
     let body = req.body;
-    connection.query(INSERT_PERFORMANCE, [
-        body.EmployeeID, 
+    // connection.query(INSERT_PERFORMANCE, [
+    //     body.EmployeeID, 
+    //     body.RatedBy, 
+    //     body.Rating, 
+    //     body.Comments, 
+    //     body.RatingDate
+    // ], (err, rows) => {
+    //     if (err)
+    //         console.log(err);
+    //     else
+    //         res.send(rows);
+
+let newPerformance = "\
+    SET @emp = ?; \
+    SET @Mang_ID = ?; \
+    SET @Rate = ?; \
+    SET @Comm = ?; \
+    SET @ratdate = ?; \
+    CALL CheckPerformanceDetailsAndUpdate(\
+    @emp, \
+    @Mang_ID, \
+    @Rate, \
+    @Comm, \
+    @ratdate);";
+    connection.query(newPerformance, [
+        body.EmployeeID,
         body.RatedBy, 
         body.Rating, 
         body.Comments, 
         body.RatingDate
     ], (err, rows) => {
-        if (err)
+        if(err)
             console.log(err);
         else
             res.send(rows);
@@ -190,7 +256,7 @@ app.post('/candidate/new', (req,res) => {
         SET @School = ?;SET @Degree = ?;SET @School_Start_Date = ?; SET @School_End_Date = ?; \
         SET @Company = ?;SET @Company_Position = ?;SET @Company_Start_Date = ?; \
         SET @Company_End_Date = ?; SET @Grades = ?;  SET @w_s1 = ?; SET @w_s2 = ?; \
-        SET @DOB = ?;SET @Nationality = ?;SET @SSN = ?;SET @Contact = ?; @remarks = ?; \
+        SET @DOB = ?;SET @Nationality = ?;SET @SSN = ?;SET @Contact = ?; SET @remarks = ?; \
         CALL newcandidateform(@FName,@LName,@Email, @addr1,@addr2,@State, \
             @City,@Country,@Zipcode,@Empstatusid, @deptid, @posi, \
             @School,@Degree,@School_Start_Date,@School_End_Date,@Company, \
@@ -395,7 +461,7 @@ app.post("/candidatestatus/edit/:candidateID/:hiringStatusID", (req, res) => {
 });
 
 app.get('/equipment', (req, res) => {
-    connection.query(SELECT_EQUIPMENT_STATUS, [req.params.id], (err, results) => {
+    connection.query(SELECT_EQUIPMENT_STATUS, (err, results) => {
         if (err) {
             return res.send(err);
         } else {
